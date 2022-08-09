@@ -39,7 +39,7 @@ int main()
 		{
 			// Пользователь нажал на «крестик» и хочет закрыть окно?
 			if (event.type == Event::Closed)
-				window.close(); // тогда закрываем его
+				window.close(); // тогда закрываем ег
 		}
 		window.clear(Color(255,255,255));
 		Target target(12,Vector2f(150,200));
