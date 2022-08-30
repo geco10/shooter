@@ -1,4 +1,5 @@
-﻿#include <SFML/Graphics.hpp>	
+﻿#include <SFML/Graphics.hpp>
+#include <cmath>
 
 using namespace sf;
 class Target :public Drawable {
@@ -20,13 +21,11 @@ public:
 		loc.y = loc.y + speed.y;
 		loc.x = loc.x + speed.x;
 	}
-	bool ifShot() {
-		int y_m = 0;
-		int x_m = 0;
-		if (y_m == loc.y && x_m == loc.x) {
-			return true;
-		}
-		else return false;
+	bool isShot(int x,int y) {
+		Vector2f center(loc.x + radius, loc.y + radius);
+		float d =sqrt((x-center.x)*(x-center.x)+(y-center.y)*(y-center.y));
+		if (radius >= d) return true;
+		return false;
 	}
 	void draw(RenderTarget& target, RenderStates states)const override {
 		CircleShape circle(radius);
@@ -65,11 +64,11 @@ public:
 	void make(int radius, Vector2f loc) {
 		arr.push_back(Target(radius, loc));
 	}
-	int shotCheck() {
-		int Tscore;
-		for (int i = 0; i < arr.size(); ++i) {
-			if (arr[i].ifShot() == true) {
-				Tscore = arr[i].calc();
+	int shotCheck(int x,int y) {
+		int Tscore=0;
+		for (int i = arr.size()-1; i >=0; --i) {
+			if (arr[i].isShot(x,y) == true) {
+				Tscore += arr[i].calc();
 				arr.erase(arr.begin() + i);
 			}
 		}
@@ -109,7 +108,9 @@ int main()
 			if (event.type == Event::Closed)
 				window.close(); // тогда закрываем ег
 			if (event.type == Event::MouseButtonPressed) {
-				//	event.mouseButton.
+				int s = tc.shotCheck(event.mouseButton.x,event.mouseButton.y);
+				printf("%i",s);
+
 			}
 		}
 
