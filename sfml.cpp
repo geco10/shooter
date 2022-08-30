@@ -71,7 +71,7 @@ public:
 			if (arr[i].ifShot() == true) {
 				Tscore = arr[i].calc();
 				arr.erase(arr.begin() + i);
-		    }
+			}
 		}
 		return Tscore;
 	}
