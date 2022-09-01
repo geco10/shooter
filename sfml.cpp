@@ -4,8 +4,10 @@
 using namespace sf;
 class Target :public Drawable {
 private:
-	Vector2f speed = { 6,10 };
+	const Vector2f speed{ 6,10 };
 	Vector2f loc;
+	int c = 0;
+	bool stepDir=true;
 	float radius;
 	int score;
 public:
@@ -14,18 +16,27 @@ public:
 		this->loc = loc;
 		score = calc();
 	}
-	int calc() {
-		return 80 - radius;
+	int calc()const {
+		return 70-radius;
 	}
 	void move() {
+		++c;
 		loc.y = loc.y + speed.y;
-		loc.x = loc.x + speed.x;
+		if (stepDir)loc.x = loc.x + speed.x;
+		else loc.x = loc.x - speed.x;
+		if (c == 2) {
+			c = 0;
+			stepDir = !stepDir;
+		}
 	}
-	bool isShot(int x,int y) {
+	int shot(int x,int y)const {
 		Vector2f center(loc.x + radius, loc.y + radius);
 		float d =sqrt((x-center.x)*(x-center.x)+(y-center.y)*(y-center.y));
-		if (radius >= d) return true;
-		return false;
+		if (radius >= d) return score;
+		else if (radius + (radius / 2) >= d) {
+			return score/3;
+		}
+		return 0;
 	}
 	void draw(RenderTarget& target, RenderStates states)const override {
 		CircleShape circle(radius);
@@ -67,8 +78,9 @@ public:
 	int shotCheck(int x,int y) {
 		int Tscore=0;
 		for (int i = arr.size()-1; i >=0; --i) {
-			if (arr[i].isShot(x,y) == true) {
-				Tscore += arr[i].calc();
+			int s = arr[i].shot(x, y);
+			if (s>0) {
+				Tscore += s;
 				arr.erase(arr.begin() + i);
 			}
 		}
@@ -90,11 +102,35 @@ public:
 		clean();
 	}
 };
+class Aim :public Drawable{
+private:
+	Vector2f loc;
+public:
+	Aim() = default;
+	void move(int x,int y) {
+		loc.x = x;
+		loc.y = y;
+	}
+	void draw(RenderTarget& target, RenderStates states)const override {
+		CircleShape circle1(15);
+		circle1.setFillColor(Color(0,0,0,0));
+		circle1.setOutlineThickness(2);
+		circle1.setOutlineColor(Color(255, 0, 0));
+		circle1.setPosition(Vector2f(loc.x-15,loc.y-15));
+		target.draw(circle1);
+
+		CircleShape circle2(2);
+		circle2.setFillColor(Color(255,0, 0));
+		circle2.setPosition(Vector2f(loc));
+		target.draw(circle2);
+	}
+};
 int main()
 {
 	srand(time(NULL));
 	Vector2f size(925, 700);
 	TargetCenter tc(size);
+	Aim aim;
 	// Объект, который, собственно, является главным окном приложения
 	RenderWindow window(VideoMode(size.x, size.y), "SFML Works!");
 	// Главный цикл приложения: выполняется, пока открыто окно
@@ -109,8 +145,12 @@ int main()
 				window.close(); // тогда закрываем ег
 			if (event.type == Event::MouseButtonPressed) {
 				int s = tc.shotCheck(event.mouseButton.x,event.mouseButton.y);
-				printf("%i",s);
+				printf("%i\n",s);
 
+			}
+			if (event.type == Event::MouseMoved) {
+				//aim.move(event.mouseButton.x, event.mouseButton.y);
+				aim.move(event.mouseMove.x, event.mouseMove.y);
 			}
 		}
 
@@ -118,6 +158,7 @@ int main()
 		tc.tick();
 		sleep((milliseconds(30)));
 		window.draw(tc);
+		window.draw(aim);
 		window.display();
 	}
 
