@@ -24,7 +24,7 @@ public:
 		loc.y = loc.y + speed.y;
 		if (stepDir)loc.x = loc.x + speed.x;
 		else loc.x = loc.x - speed.x;
-		if (c == 2) {
+		if (c == 5) {
 			c = 0;
 			stepDir = !stepDir;
 		}
