@@ -125,6 +125,17 @@ public:
 		target.draw(circle2);
 	}
 };
+class Sc :public Drawable{
+private:
+	int score=0;
+public:
+	void sync(int a) {
+		score += a;
+	}
+	void draw(RenderTarget& target, RenderStates states)const override {
+	  
+	}
+};
 int main()
 {
 	srand(time(NULL));
