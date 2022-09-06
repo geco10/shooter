@@ -4,7 +4,7 @@
 using namespace sf;
 class Target :public Drawable {
 private:
-	const Vector2f speed{ 6,10 };
+	Vector2f speed{ 6,10 };
 	Vector2f loc;
 	int c = 0;
 	bool stepDir=true;
@@ -133,24 +133,36 @@ public:
 		score += a;
 	}
 	void intToStr(int a,char* res)const {
-		for (int i = 0; a!=0; i++,a/=10){
+		int i = 0;
+		printf("%i",a);
+		do{
 			res[i] = a % 10+'0';
+			res[i + 1] = '\0';
+			++i;
+			a /= 10;
+		} while (a != 0);
+		for (int j = 0; j < i / 2; ++j) {
+			char t = res[j];
+			res[j] = res[i - 1 - j];
+			res[i - 1 - j] = t;
 		}
+		puts(res);
 	}
 	void draw(RenderTarget& target, RenderStates states)const override {
 		char scoreStr[100];
 		intToStr(score, scoreStr);
 		Font font;
 		font.loadFromFile("Top Secret.ttf");
-		Text text(scoreStr,font,10u);
+		Text text(scoreStr, font, 20u);
+		text.setFillColor(Color(0, 0, 0));
 		text.setPosition(Vector2f(0,0));
-		
+		target.draw(text);
 	}
 };
 int main()
 {
 	srand(time(NULL));
-	//GameScore sc;
+	GameScore sc;
 	Vector2f size(925, 700);
 	TargetCenter tc(size);
 	Aim aim;
@@ -168,7 +180,7 @@ int main()
 				window.close(); // тогда закрываем ег
 			if (event.type == Event::MouseButtonPressed) {
 				int s = tc.shotCheck(event.mouseButton.x,event.mouseButton.y);
-				printf("%i\n",s);
+				sc.add(s);
 
 			}
 			if (event.type == Event::MouseMoved) {
@@ -182,7 +194,7 @@ int main()
 		sleep((milliseconds(30)));
 		window.draw(tc);
 		window.draw(aim);
-		//window.draw(sc);
+		window.draw(sc);
 		window.display();
 	}
 
