@@ -125,20 +125,32 @@ public:
 		target.draw(circle2);
 	}
 };
-class Sc :public Drawable{
+class GameScore:public Drawable{
 private:
 	int score=0;
 public:
-	void sync(int a) {
+	void add(int a) {
 		score += a;
 	}
+	void intToStr(int a,char* res)const {
+		for (int i = 0; a!=0; i++,a/=10){
+			res[i] = a % 10+'0';
+		}
+	}
 	void draw(RenderTarget& target, RenderStates states)const override {
-	  
+		char scoreStr[100];
+		intToStr(score, scoreStr);
+		Font font;
+		font.loadFromFile("Top Secret.ttf");
+		Text text(scoreStr,font,10u);
+		text.setPosition(Vector2f(0,0));
+		
 	}
 };
 int main()
 {
 	srand(time(NULL));
+	//GameScore sc;
 	Vector2f size(925, 700);
 	TargetCenter tc(size);
 	Aim aim;
@@ -170,6 +182,7 @@ int main()
 		sleep((milliseconds(30)));
 		window.draw(tc);
 		window.draw(aim);
+		//window.draw(sc);
 		window.display();
 	}
 
