@@ -1,11 +1,12 @@
 ﻿#include <SFML/Graphics.hpp>
 #include<string.h>
+#include<windows.h>
 #include <cmath>
 
 using namespace sf;
 class Target :public Drawable {
 private:
-	Vector2f speed{ 6,10 };
+	Vector2f speed{ 400,200 };
 	Vector2f loc;
 	int c = 0;
 	bool stepDir=true;
@@ -20,11 +21,11 @@ public:
 	int calc()const {
 		return 70-radius;
 	}
-	void move() {
+	void move(float delta) {
 		++c;
-		loc.y = loc.y + speed.y;
-		if (stepDir)loc.x = loc.x + speed.x;
-		else loc.x = loc.x - speed.x;
+		loc.y = loc.y + speed.y * delta;
+		if (stepDir)loc.x = loc.x + speed.x*delta;
+		else loc.x = loc.x - speed.x*delta;
 		if (c == 5) {
 			c = 0;
 			stepDir = !stepDir;
@@ -68,9 +69,9 @@ public:
 			make(radius, loc);
 		}
 	}
-	void move() {
+	void move(float delta) {
 		for (int i = 0; i < arr.size(); ++i) {
-			arr[i].move();
+			arr[i].move(delta);
 		}
 	}
 	void make(int radius, Vector2f loc) {
@@ -97,8 +98,8 @@ public:
 			if (screen.y < arr[i].locY()) arr.erase(arr.begin() + i);
 		}
 	}
-	void tick() {
-		move();
+	void tick(float delta) {
+		move(delta);
 		trySpamn();
 		clean();
 	}
@@ -139,7 +140,6 @@ public:
 	}
 	void intToStr(int a,char* res)const {
 		int i = 0;
-		printf("%i",a);
 		do{
 			res[i] = a % 10+'0';
 			res[i + 1] = '\0';
@@ -151,20 +151,24 @@ public:
 			res[j] = res[i - 1 - j];
 			res[i - 1 - j] = t;
 		}
-		puts(res);
 	}
 	void draw(RenderTarget& target, RenderStates states)const override {
 		char scoreStr[100];
 		intToStr(score, scoreStr);
-		int a = strlen(scoreStr);
+		char v[60] = "score: ";
+		strcat_s(v,scoreStr);
+		int a = strlen(v);
 		Font font;
 		font.loadFromFile("Top Secret.ttf");
-		Text text(scoreStr, font, 20u);
+		Text text(v, font, 20u);
 		text.setFillColor(Color(0, 0, 0));
 		text.setPosition(Vector2f((screen.x-10)-a*10,0));
 		target.draw(text);
 	}
 };
+size_t toMilliseconds(SYSTEMTIME time) {
+	return time.wHour * 3600000 + time.wMinute * 60000 +time.wSecond*1000 + time.wMilliseconds;
+}
 int main()
 {
 	srand(time(NULL));
@@ -175,6 +179,8 @@ int main()
 	// Объект, который, собственно, является главным окном приложения
 	RenderWindow window(VideoMode(size.x, size.y), "SFML Works!");
 	// Главный цикл приложения: выполняется, пока открыто окно
+	SYSTEMTIME time;
+	GetLocalTime(&time);
 	while (window.isOpen())
 	{
 		// Обрабатываем очередь событий в цикле
@@ -196,8 +202,11 @@ int main()
 		}
 
 		window.clear(Color(0, 255, 0));
-		tc.tick();
-		sleep((milliseconds(30)));
+		SYSTEMTIME time1;
+		GetLocalTime(&time1);
+		int delta = toMilliseconds(time1) - toMilliseconds(time);
+		time = time1;
+		tc.tick(delta/1000.f);
 		window.draw(tc);
 		window.draw(aim);
 		window.draw(sc);
