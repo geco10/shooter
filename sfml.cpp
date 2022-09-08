@@ -1,4 +1,5 @@
 ﻿#include <SFML/Graphics.hpp>
+#include<string.h>
 #include <cmath>
 
 using namespace sf;
@@ -128,7 +129,11 @@ public:
 class GameScore:public Drawable{
 private:
 	int score=0;
+	Vector2f screen;
 public:
+	GameScore(Vector2f screen) {
+		this->screen = screen;
+	}
 	void add(int a) {
 		score += a;
 	}
@@ -151,19 +156,20 @@ public:
 	void draw(RenderTarget& target, RenderStates states)const override {
 		char scoreStr[100];
 		intToStr(score, scoreStr);
+		int a = strlen(scoreStr);
 		Font font;
 		font.loadFromFile("Top Secret.ttf");
 		Text text(scoreStr, font, 20u);
 		text.setFillColor(Color(0, 0, 0));
-		text.setPosition(Vector2f(0,0));
+		text.setPosition(Vector2f((screen.x-10)-a*10,0));
 		target.draw(text);
 	}
 };
 int main()
 {
 	srand(time(NULL));
-	GameScore sc;
 	Vector2f size(925, 700);
+	GameScore sc(size);
 	TargetCenter tc(size);
 	Aim aim;
 	// Объект, который, собственно, является главным окном приложения
