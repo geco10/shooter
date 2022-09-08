@@ -6,9 +6,9 @@
 using namespace sf;
 class Target :public Drawable {
 private:
-	Vector2f speed{ 400,200 };
+	Vector2f speed{ 100,30 };
 	Vector2f loc;
-	int c = 0;
+	size_t c = 0;
 	bool stepDir=true;
 	float radius;
 	int score;
@@ -22,11 +22,11 @@ public:
 		return 70-radius;
 	}
 	void move(float delta) {
-		++c;
+		c+=delta;
 		loc.y = loc.y + speed.y * delta;
 		if (stepDir)loc.x = loc.x + speed.x*delta;
 		else loc.x = loc.x - speed.x*delta;
-		if (c == 5) {
+		if (c>1) {
 			c = 0;
 			stepDir = !stepDir;
 		}
