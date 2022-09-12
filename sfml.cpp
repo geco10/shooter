@@ -6,7 +6,7 @@
 using namespace sf;
 class Target :public Drawable {
 private:
-	Vector2f speed{ 100,30 };
+	Vector2f speed{ 2300,300 };
 	Vector2f loc;
 	size_t c = 0;
 	bool stepDir=true;
@@ -26,7 +26,7 @@ public:
 		loc.y = loc.y + speed.y * delta;
 		if (stepDir)loc.x = loc.x + speed.x*delta;
 		else loc.x = loc.x - speed.x*delta;
-		if (c>1) {
+		if (c>=0) {
 			c = 0;
 			stepDir = !stepDir;
 		}
