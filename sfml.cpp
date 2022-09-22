@@ -4,55 +4,7 @@
 #include <cmath>
 
 using namespace sf;
-class Target :public Drawable {
-private:
-	Vector2f speed{ 400,300 };
-	Vector2f loc;
-	float c = 0;
-	bool stepDir=true;
-	float radius;
-	int score;
-public:
-	Target(float radius, Vector2f loc) {
-		this->radius = radius;
-		this->loc = loc;
-		score = calc();
-	}
-	int calc()const {
-		return 70-radius;
-	}
-	void move(float delta) {
-		c+=delta;
-		//printf("%i",c);
-		loc.y = loc.y + speed.y * delta;
-		if (stepDir)loc.x = loc.x + speed.x*delta;
-		else loc.x = loc.x - speed.x*delta;
-		if (c>=1) {
-			c = 0;
-			stepDir = !stepDir;
-		}
-	}
-	int shot(int x,int y)const {
-		Vector2f center(loc.x + radius, loc.y + radius);
-		float d =sqrt((x-center.x)*(x-center.x)+(y-center.y)*(y-center.y));
-		if (radius >= d) return score;
-		else if (radius + (radius / 2) >= d) {
-			return score/3;
-		}
-		return 0;
-	}
-	void draw(RenderTarget& target, RenderStates states)const override {
-		CircleShape circle(radius);
-		circle.setFillColor(Color(255, 255, 255));
-		circle.setOutlineThickness(radius / 2);
-		circle.setOutlineColor(Color(255, 0, 0));
-		circle.setPosition(Vector2f(loc));
-		target.draw(circle);
-	}
-	int locY() {
-		return loc.y;
-	}
-};
+#include"Target.h"
 class TargetCenter :public Drawable {
 	std::vector<Target> arr;
 	Vector2f screen;
