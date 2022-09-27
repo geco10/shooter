@@ -146,12 +146,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Aim.cpp" />
+    <ClCompile Include="GameScore.cpp" />
     <ClCompile Include="sfml.cpp" />
     <ClCompile Include="Target.cpp" />
     <ClCompile Include="TargetCenter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aim.h" />
+    <ClInclude Include="GameScore.h" />
     <ClInclude Include="Target.h" />
     <ClInclude Include="TargetCenter.h" />
   </ItemGroup>
