@@ -147,9 +147,11 @@
   <ItemGroup>
     <ClCompile Include="sfml.cpp" />
     <ClCompile Include="Target.cpp" />
+    <ClCompile Include="TargetCenter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Target.h" />
+    <ClInclude Include="TargetCenter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,61 +2,61 @@
 #include<string.h>
 #include<windows.h>
 #include <cmath>
-
-using namespace sf;
+#include"TargetCenter.h"
 #include"Target.h"
-class TargetCenter :public Drawable {
-	std::vector<Target> arr;
-	Vector2f screen;
-	int max = 7;
-public:
-	TargetCenter(Vector2f screen) {
-		this->screen = screen;
-	}
-	void trySpamn() {
-		if (arr.size() < max) {
-			int radius = rand() % 50 + 20;
-			Vector2f loc;
-			loc.x = rand() % (int)screen.x;
-			loc.y = radius * (-2);
-			make(radius, loc);
-		}
-	}
-	void move(float delta) {
-		for (int i = 0; i < arr.size(); ++i) {
-			arr[i].move(delta);
-		}
-	}
-	void make(int radius, Vector2f loc) {
-		arr.push_back(Target(radius, loc));
-	}
-	int shotCheck(int x,int y) {
-		int Tscore=0;
-		for (int i = arr.size()-1; i >=0; --i) {
-			int s = arr[i].shot(x, y);
-			if (s>0) {
-				Tscore += s;
-				arr.erase(arr.begin() + i);
-			}
-		}
-		return Tscore;
-	}
-	void draw(RenderTarget& target, RenderStates states)const override {
-		for (int i = 0; i < arr.size(); ++i) {
-			target.draw(arr[i]);
-		}
-	}
-	void clean() {
-		for (int i = 0; i < arr.size(); i++) {
-			if (screen.y < arr[i].locY()) arr.erase(arr.begin() + i);
-		}
-	}
-	void tick(float delta) {
-		move(delta);
-		trySpamn();
-		clean();
-	}
-};
+using namespace sf;
+//class TargetCenter :public Drawable {
+//	std::vector<Target> arr;
+//	Vector2f screen;
+//	int max = 7;
+//public:
+//	TargetCenter(Vector2f screen) {
+//		this->screen = screen;
+//	}
+//	void trySpamn() {
+//		if (arr.size() < max) {
+//			int radius = rand() % 50 + 20;
+//			Vector2f loc;
+//			loc.x = rand() % (int)screen.x;
+//			loc.y = radius * (-2);
+//			make(radius, loc);
+//		}
+//	}
+//	void move(float delta) {
+//		for (int i = 0; i < arr.size(); ++i) {
+//			arr[i].move(delta);
+//		}
+//	}
+//	void make(int radius, Vector2f loc) {
+//		arr.push_back(Target(radius, loc));
+//	}
+//	int shotCheck(int x,int y) {
+//		int Tscore=0;
+//		for (int i = arr.size()-1; i >=0; --i) {
+//			int s = arr[i].shot(x, y);
+//			if (s>0) {
+//				Tscore += s;
+//				arr.erase(arr.begin() + i);
+//			}
+//		}
+//		return Tscore;
+//	}
+//	void draw(RenderTarget& target, RenderStates states)const override {
+//		for (int i = 0; i < arr.size(); ++i) {
+//			target.draw(arr[i]);
+//		}
+//	}
+//	void clean() {
+//		for (int i = 0; i < arr.size(); i++) {
+//			if (screen.y < arr[i].locY()) arr.erase(arr.begin() + i);
+//		}
+//	}
+//	void tick(float delta) {
+//		move(delta);
+//		trySpamn();
+//		clean();
+//	}
+//};
 class Aim :public Drawable{
 private:
 	Vector2f loc;
