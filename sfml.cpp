@@ -4,82 +4,32 @@
 #include <cmath>
 #include"TargetCenter.h"
 #include"Target.h"
+#include"Aim.h"
 using namespace sf;
-//class TargetCenter :public Drawable {
-//	std::vector<Target> arr;
-//	Vector2f screen;
-//	int max = 7;
+
+//class Aim :public Drawable{
+//private:
+//	Vector2f loc;
 //public:
-//	TargetCenter(Vector2f screen) {
-//		this->screen = screen;
-//	}
-//	void trySpamn() {
-//		if (arr.size() < max) {
-//			int radius = rand() % 50 + 20;
-//			Vector2f loc;
-//			loc.x = rand() % (int)screen.x;
-//			loc.y = radius * (-2);
-//			make(radius, loc);
-//		}
-//	}
-//	void move(float delta) {
-//		for (int i = 0; i < arr.size(); ++i) {
-//			arr[i].move(delta);
-//		}
-//	}
-//	void make(int radius, Vector2f loc) {
-//		arr.push_back(Target(radius, loc));
-//	}
-//	int shotCheck(int x,int y) {
-//		int Tscore=0;
-//		for (int i = arr.size()-1; i >=0; --i) {
-//			int s = arr[i].shot(x, y);
-//			if (s>0) {
-//				Tscore += s;
-//				arr.erase(arr.begin() + i);
-//			}
-//		}
-//		return Tscore;
+//	Aim() = default;
+//	void move(int x,int y) {
+//		loc.x = x;
+//		loc.y = y;
 //	}
 //	void draw(RenderTarget& target, RenderStates states)const override {
-//		for (int i = 0; i < arr.size(); ++i) {
-//			target.draw(arr[i]);
-//		}
-//	}
-//	void clean() {
-//		for (int i = 0; i < arr.size(); i++) {
-//			if (screen.y < arr[i].locY()) arr.erase(arr.begin() + i);
-//		}
-//	}
-//	void tick(float delta) {
-//		move(delta);
-//		trySpamn();
-//		clean();
+//		CircleShape circle1(15);
+//		circle1.setFillColor(Color(0,0,0,0));
+//		circle1.setOutlineThickness(2);
+//		circle1.setOutlineColor(Color(255, 0, 0));
+//		circle1.setPosition(Vector2f(loc.x-15,loc.y-15));
+//		target.draw(circle1);
+//
+//		CircleShape circle2(2);
+//		circle2.setFillColor(Color(255,0, 0));
+//		circle2.setPosition(Vector2f(loc));
+//		target.draw(circle2);
 //	}
 //};
-class Aim :public Drawable{
-private:
-	Vector2f loc;
-public:
-	Aim() = default;
-	void move(int x,int y) {
-		loc.x = x;
-		loc.y = y;
-	}
-	void draw(RenderTarget& target, RenderStates states)const override {
-		CircleShape circle1(15);
-		circle1.setFillColor(Color(0,0,0,0));
-		circle1.setOutlineThickness(2);
-		circle1.setOutlineColor(Color(255, 0, 0));
-		circle1.setPosition(Vector2f(loc.x-15,loc.y-15));
-		target.draw(circle1);
-
-		CircleShape circle2(2);
-		circle2.setFillColor(Color(255,0, 0));
-		circle2.setPosition(Vector2f(loc));
-		target.draw(circle2);
-	}
-};
 class GameScore:public Drawable{
 private:
 	int score=0;
